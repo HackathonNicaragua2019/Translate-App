@@ -1,22 +1,40 @@
 package com.argonautas.translate_app;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     //declaracion de variables para los spinners
     int id1ant, id2ant;
     Spinner spinner1;
     Spinner spinner2;
-    String [] idiomas;
+    String[] idiomas;
 
     Button btn1, btn2;
+
+    private static final int REQ_CODE_SPEECH_INPUT = 100;
+    private EditText mEntradaVoz;
+    private Button mBotonHablar;
+
+    private EditText miCaja;
+    private TextView miSalida;
+    private Button botonMostrar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +59,40 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //para hacer refencia al metodo para trabajar con la posicion de los elementos del array
         spinner1.setOnItemSelectedListener(this);
         spinner2.setOnItemSelectedListener(this);
+
+        //referencia al edittext
+        mEntradaVoz = findViewById(R.id.et_input);
+
+        //referencia al boton del microfono
+        mBotonHablar = findViewById(R.id.btn_micro);
+
+        //para cuando se preciona el boton del microfono
+        mBotonHablar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                iniciarEntradaVoz();
+            }
+        });
+
+        //asigna a una variable lo que tenga el edittext
+        miCaja = mEntradaVoz;
+
+        //referencia al textview donde se mostrara las traducciones y al boton para traducir
+        miSalida = findViewById(R.id.tv_Salida);
+        botonMostrar = findViewById(R.id.btnTraducir);
+
+        //para cuando se preciona el boton traducir
+        botonMostrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String miNombre = null;
+
+                miNombre = miCaja.getText().toString();
+                miSalida.setText(miNombre);
+            }
+        });
+
+
     }
 
 
@@ -83,5 +135,34 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+//funciones para poder activar el microfono y poder escribir en el edittext lo capturado
+    private void iniciarEntradaVoz() {
+
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Escuchando");
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException e) {
+
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQ_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    mEntradaVoz.setText(result.get(0));
+                }
+                break;
+            }
+        }
     }
 }
