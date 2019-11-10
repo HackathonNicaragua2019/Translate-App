@@ -15,11 +15,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -29,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+
     //declaracion de variables para los spinners
     int id1ant, id2ant;
     Spinner spinner1;
@@ -53,10 +53,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     //para la base de datos
     FirebaseFirestore db;
 
+    private Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        toolbar = findViewById(R.id.toolBar);
+       // setSupportActionBar(toolbar);
 
         //para los distintos lenguajes
         listalen.add(new poslenguaje(0,"esp","Español"));
@@ -115,6 +121,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         miSalida = findViewById(R.id.tv_Salida);
         botonMostrar = findViewById(R.id.btnTraducir);
     }
+
+
 
     @Override
     public void onItemSelected(final AdapterView<?> parent, View view, int position, long id) {
