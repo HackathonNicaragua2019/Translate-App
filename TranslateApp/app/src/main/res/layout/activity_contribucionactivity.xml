@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Contribucion_activity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:orientation="horizontal"
+
+        android:background="#4D86C9">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:text="Contribuir a Traducir"
+
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="9"
+        android:orientation="vertical"
+        >
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#4D86C9"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginTop="15dp"
+            android:textStyle="bold"
+            android:text="Español"/>
+
+        <EditText
+            android:id="@+id/edt_esp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingrese La Palabra En Español"
+            android:text="" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:textStyle="italic"
+            android:layout_height="wrap_content"
+            android:text="Ejemplo Español"/>
+
+        <EditText
+            android:id="@+id/ej_esp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingrese Un Ejemplo" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="Inglés"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/edt_ing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingrese La Palabra En Ingles" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="Ejemplo Ingles"
+            android:textStyle="italic"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/ej_ing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingrese Un Ejemplo" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_marginTop="15dp"
+            android:text="Miskito"/>
+
+        <EditText
+            android:id="@+id/edt_mis"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingrese Una Palabra En Miskito" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:text="Ejemplo miskito"
+            android:textStyle="italic"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/ej_mis"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingrese Un Ejemplo" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_marginTop="15dp"
+            android:text="Mayagna"/>
+
+        <EditText
+            android:id="@+id/edt_may"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingrese La Palabra En Mayagna" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:textStyle="italic"
+            android:text="Ejemplo Mayagna"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/ej_may"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingrese Un Ejemplo" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="25dp"
+            android:text="Enviar"
+            android:shadowColor="#4D86C9"
+            android:id="@+id/contrib"/>
+
+    </LinearLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

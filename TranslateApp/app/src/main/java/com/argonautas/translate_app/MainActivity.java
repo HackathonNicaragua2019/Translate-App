@@ -233,8 +233,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void colaborar(View view) {
-        //Intent colabo = new Intent(this, colaborar.class);
-        //startActivity(colabo);
+        Intent colabo = new Intent(this, Contribucion_activity.class);
+        startActivity(colabo);
     }
 
     public void Nosotros(View view) {
