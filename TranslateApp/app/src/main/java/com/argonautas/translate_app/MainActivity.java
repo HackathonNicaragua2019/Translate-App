@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private static final int REQ_CODE_SPEECH_INPUT = 100;
     private EditText mEntradaVoz;
-    private Button mBotonHablar;
+    private Button mBotonHablar, home;
 
     private EditText miCaja;
     private TextView miSalida , miSalidaEj;
@@ -69,6 +69,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         listalen.add(new poslenguaje(1,"ing", "Ingles"));
         listalen.add(new poslenguaje(2,"mis", "Miskito"));
         listalen.add(new poslenguaje(3,"may","Mayagna"));
+
+
+        home = findViewById(R.id.btn_Home);
 
 
         //referencia para al textview donde muesta el ejemplo
@@ -217,5 +220,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 break;
             }
         }
+    }
+
+    public void home(View view) {
+        Intent traductor = new Intent(this, MainActivity.class);
+        startActivity(traductor);
+    }
+
+    public void mapa(View view) {
+        Intent mapa = new Intent(this, maps.class);
+        startActivity(mapa);
+    }
+
+    public void colaborar(View view) {
+        //Intent colabo = new Intent(this, colaborar.class);
+        //startActivity(colabo);
+    }
+
+    public void Nosotros(View view) {
+       // Intent nos = new Intent(this, nosotros.class);
+        //startActivity(nosotros);
+    }
+
+    public void sesion(View view) {
+        Intent sesion = new Intent(this, login.class);
+        startActivity(sesion);
     }
 }
