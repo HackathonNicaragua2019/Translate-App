@@ -1,5 +1,6 @@
 package com.argonautas.translate_app;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,6 +8,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -15,7 +17,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -24,21 +34,43 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     Spinner spinner1;
     Spinner spinner2;
     String[] idiomas;
+    List<poslenguaje> listalen=new ArrayList<poslenguaje>();
 
-    Button btn1, btn2;
+    //boton cambiar
+    Button btn1;
+
+    String miPalabra = null;
+   // String miPalabraMin = null;
 
     private static final int REQ_CODE_SPEECH_INPUT = 100;
     private EditText mEntradaVoz;
     private Button mBotonHablar;
 
     private EditText miCaja;
-    private TextView miSalida;
+    private TextView miSalida , miSalidaEj;
     private Button botonMostrar;
+
+    //para la base de datos
+    FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //para los distintos lenguajes
+        listalen.add(new poslenguaje(0,"esp","Español"));
+        listalen.add(new poslenguaje(1,"ing", "Ingles"));
+        listalen.add(new poslenguaje(2,"mis", "Miskito"));
+        listalen.add(new poslenguaje(3,"may","Mayagna"));
+
+
+        //referencia para al textview donde muesta el ejemplo
+        miSalidaEj = findViewById(R.id.txt_ejemplo);
+
+        //Crear la instancia a la base de datos
+        db = FirebaseFirestore.getInstance();
+
         //refencia a los id de los spinnes y el boton para cambiar los idiomas
         spinner1 = findViewById(R.id.spinner1);
         spinner2 = findViewById(R.id.spinner2);
@@ -46,7 +78,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //referencia a boton para intercambiar los idiomas
         btn1 = findViewById(R.id.btn_cambiar);
 
+
         //le decimos al spinner 2 que muestre el elemento 2 del array
+        spinner1.setSelection(0);
         spinner2.setSelection(1);
 
         //asignamos a las variables la posiciones de los elementos en los spinners
@@ -80,24 +114,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //referencia al textview donde se mostrara las traducciones y al boton para traducir
         miSalida = findViewById(R.id.tv_Salida);
         botonMostrar = findViewById(R.id.btnTraducir);
-
-        //para cuando se preciona el boton traducir
-        botonMostrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String miNombre = null;
-
-                miNombre = miCaja.getText().toString();
-                miSalida.setText(miNombre);
-            }
-        });
-
-
     }
 
-
     @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemSelected(final AdapterView<?> parent, View view, int position, long id) {
         //para que el usuario no pueda seleccionar el mismo idioma
         //en cada case hacemos el intercambio de los elementos
         switch (parent.getId()) {
@@ -113,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
                 id2ant = spinner2.getSelectedItemPosition();
                 break;
-
         }
         //para que el boton de intercambiar los idiomas
         btn1.setOnClickListener(new View.OnClickListener() {
@@ -129,7 +148,33 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 spinner1.setSelection(cambiar2);
             }
         });
-
+        //para el boton traducir y este me pueda hacer la consulta a la base de datos
+        botonMostrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                miPalabra = miCaja.getText().toString();
+                final int pos_sp1=spinner1.getSelectedItemPosition();
+                final int pos_sp2=spinner2.getSelectedItemPosition();
+                db.collection("Palabras").whereEqualTo(listalen.get(pos_sp1).lenguaje, miPalabra.toLowerCase()).get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        String verdatos, verEjemplo;
+                                        verdatos =  document.getData().get(listalen.get(pos_sp2).lenguaje).toString();
+                                        miSalida.setText(verdatos);
+                                       verEjemplo = listalen.get(pos_sp2).lenguajeCompleto +": " + document.getData().get("ej_"+listalen.get(pos_sp2).lenguaje) + "\n\n" +
+                                               listalen.get(pos_sp1).lenguajeCompleto +": " + document.getData().get("ej_"+listalen.get(pos_sp1).lenguaje).toString();
+                                        miSalidaEj.setText(verEjemplo);
+                                    }
+                                } else {
+                                    Log.w("migna", "Error getting documents.", task.getException());
+                                }
+                            }
+                        });
+            }
+        });
     }
 
     @Override
